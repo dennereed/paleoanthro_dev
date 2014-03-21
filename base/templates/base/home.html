@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load fiber_tags%}
+
+{% block main_content %}
+{% if announcement_list %}
+    {% for announcement in announcement_list %}
+        <div class="content">
+        <h2>{{ announcement.title }}</h2>
+        <p>{{ announcement.body }}</p>
+        </div>
+        <hr/>
+    {% endfor %}
+{% else %}
+    <p>There are no active announcements.</p>
+{% endif %}
+
+{% endblock %}
