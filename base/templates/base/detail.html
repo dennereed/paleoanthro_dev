@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load fiber_tags%}
+
+{% block main_content %}
+
+    <section class="content">
+    {{ announcement.title }}
+    {{ announcement.body|safe }}
+    </section>
+{% endblock %}

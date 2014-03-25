@@ -11,7 +11,8 @@
 	<div id="wpr-page">
 		<div id="page">
 			<header>
-				<div id="logo">Paleoanthro.org</div>
+
+                <div id="logo"><a href="/home"><img id="logo_image" src="{% static 'paleoanthro_images/skull_grey150.jpg' %}"></a>Paleoanthropology Society</div>
 				<nav id="mainmenu" class="clearfix">
 					{% show_menu "mainmenu" 1 1 %}
 				</nav>
@@ -20,6 +21,9 @@
 				<nav id="submenu">
 					{% show_menu "mainmenu" 2 3 %}
 				</nav>
+                {% show_page_content "aside-upper-left" %}
+                {% show_page_content "aside-lower-left" %}
+                <div class="button"><a href="/home/join">JOIN!</a></div>
 			</aside>
 			<section id="main">
 				<nav id="breadcrumbs" class="clearfix">
@@ -34,12 +38,12 @@
 				<article>
 					{% show_page_content "main" %}
                     {% block main_content %}{% endblock %}
+                    {% show_page_content "main_bottom" %}
 				</article>
 			</section>
 			<aside id="aside-right">
-				{% show_page_content "aside" %}
-
-				{% show_content "address" %}
+				{% show_page_content "aside-upper_right" %}
+                {% show_page_content "asside-lower-right" %}
 			</aside>
 		</div>
 	</div>
