@@ -344,4 +344,9 @@ ol li {
 .button a {text-decoration: none; color: #fff;}
 
 /* tables */
-#join_table {padding: 5px}
+/* #join_table {padding: 5px} */
+
+#more
+{margin-top: -20px}
+
+#more a {text-decoration: none}

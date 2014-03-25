@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from ckeditor.fields import RichTextField
+import os
 
 ############################################
 # PaleoanthroUser
@@ -51,6 +52,9 @@ class Announcement(models.Model):
     pub_date = models.DateField(default=timezone.now())
     expires = models.DateField()
     approved = models.NullBooleanField()
+    upload1 = models.FileField(upload_to='static/uploads', null=True, blank=True)
+    upload2 = models.FileField(upload_to='static/uploads', null=True, blank=True)
+    upload3 = models.FileField(upload_to='static/uploads', null=True, blank=True)
 
     def __unicode__(self):
         return self.title[0:20]
@@ -64,3 +68,13 @@ class Announcement(models.Model):
     is_active.admin_order_field='pub_date'
     is_active.boolean = True
     is_active.short_description='Active'
+
+    @property
+    def upload1_filename(self):
+        return os.path.basename(self.upload1.name)
+
+    def upload2_filename(self):
+        return os.path.basename(self.upload2.name)
+
+    def upload3_filename(self):
+        return os.path.basename(self.upload3.name)

@@ -9,7 +9,7 @@
                 <div class="content">
                 <h2>{{ announcement.title }}</h2>
                 {{ announcement.stub|safe }}
-                <p><a href="{%  url 'base:detail' announcement.id %}">more...</a></p>
+                <p id="more"><a href="{%  url 'base:detail' announcement.id %}">more...</a></p>
                 </div>
                 <hr/>
             {% endfor %}
