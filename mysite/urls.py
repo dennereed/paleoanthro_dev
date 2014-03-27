@@ -3,6 +3,8 @@ from django.contrib import admin
 from django.conf import settings
 from base import views
 from django.conf.urls.static import static
+from django.views.generic.base import RedirectView
+from django.core.urlresolvers import reverse
 
 
 admin.autodiscover()
@@ -13,8 +15,9 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     # App URLS
-    url(r'^$', views.IndexView.as_view(), name='home'), # perhaps better if this redirected to home
-    url(r'^home/', include('base.urls', namespace="base")),  # note the lack of a terminal dollar sign
+    url(r'^$', RedirectView.as_view(url='home/'), name='reverse'),  # redirected to home
+    url(r'^home/', include('base.urls', namespace="base")),  # note the lack of a terminal dollar sign.
+
 
     #url(r'^workshops/', include('meetings.urls', namespace="meetings")),
     #url(r'^data/', include('data.urls', namespace="data")),  # note the lack of a terminal dollar sign in the re

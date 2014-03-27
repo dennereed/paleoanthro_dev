@@ -75,6 +75,7 @@ header {
 #mainmenu ul li a:hover,
 #mainmenu ul li.current a {
 	color: #f30;
+    color:#0893cf;
 }
 
 /* Submenu */
@@ -106,6 +107,7 @@ header {
 #submenu ul li a:hover,
 #submenu ul li.current a {
 	color: #f30;
+    color: #0893cf;
 }
 
 #submenu ul li.current ul li a {
@@ -115,6 +117,7 @@ header {
 #submenu ul li.current ul li a:hover,
 #submenu ul li ul li.current a {
 	color: #f30;
+    color: #0893cf;
 }
 
 /* Breadcrumbs */
@@ -232,6 +235,7 @@ header {
 
 .content a {
 	color: #f30;
+    color: #0893cf;
 	text-decoration: underline;
 }
 
@@ -350,3 +354,11 @@ ol li {
 {margin-top: -20px}
 
 #more a {text-decoration: none}
+
+.center{text-align: center}
+
+#square {
+    width: 10px;
+    height: 10px;
+    background-color: #0893cf;
+}

@@ -2,14 +2,19 @@
 {% load fiber_tags%}
 
 {% block main_content %}
-
+    <div class="center"><img id="square" class="center" /> <img id="square" class="center" /> <img id="square" class="center" /></div>
+    <p>&nbsp;</p>
     <section class="content">
         {% if announcement_list %}
             {% for announcement in announcement_list %}
                 <div class="content">
                 <h2>{{ announcement.title }}</h2>
                 {{ announcement.stub|safe }}
-                <p id="more"><a href="{%  url 'base:detail' announcement.id %}">more...</a></p>
+
+                {% if announcement.body %}
+                <p id="more"><a href="{%  url 'base:announcement_detail' announcement.id %}">more...</a></p>
+                {% endif %}
+
                 </div>
                 <hr/>
             {% endfor %}
