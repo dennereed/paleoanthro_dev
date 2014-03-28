@@ -15,7 +15,7 @@ class PaleoanthroUserAdmin(admin.ModelAdmin):
         return self.user.first_name
     list_filter = ['send_emails','institution']
     search_fields = ('last_name','first_name')
-    list_display = [first_name,last_name,email,"send_emails"]
+    list_display = ['first_name', 'last_name', 'email', 'send_emails']
     actions = ['send_emails']
 
     def send_emails(self, request, queryset):

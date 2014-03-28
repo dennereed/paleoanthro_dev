@@ -36,8 +36,9 @@ class AbstractInline(admin.TabularInline):
 
 
 class MeetingAdmin(admin.ModelAdmin):
-    list_display = ('id', 'location', 'start_date', 'end_date', 'associated_with')
+    list_display = ('id', 'title', 'year', 'location', 'start_date', 'end_date', 'associated_with')
     list_display_links = ['id', 'location']
+    list_editable = ['year', 'associated_with']
     list_filter = ['associated_with']
     search_fields = ['location', 'associated_with', 'description']
     inlines = [AbstractInline,]
