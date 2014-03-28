@@ -57,7 +57,7 @@ class Abstract(models.Model):
     last_modified = models.DateField(null=False, blank=True, auto_now_add=True, auto_now=True)
     created = models.DateField(null=False, blank=True, auto_now_add=True)
     abstract_rank = models.IntegerField(null=True, blank=True)
-    abstract_media = models.FileField(upload_to="media/", null=True, blank=True)
+    abstract_media = models.FileField(upload_to="meetings/files", null=True, blank=True)
 
     def __unicode__(self):
         return self.title[0:20]

@@ -50,9 +50,9 @@ class Announcement(models.Model):
     pub_date = models.DateField(default=timezone.now())
     expires = models.DateField()
     approved = models.NullBooleanField()
-    upload1 = models.FileField(upload_to='static/uploads', null=True, blank=True)
-    upload2 = models.FileField(upload_to='static/uploads', null=True, blank=True)
-    upload3 = models.FileField(upload_to='static/uploads', null=True, blank=True)
+    upload1 = models.FileField(upload_to='uploads/files', null=True, blank=True)
+    upload2 = models.FileField(upload_to='uploads/files', null=True, blank=True)
+    upload3 = models.FileField(upload_to='uploads/files', null=True, blank=True)
 
     def __unicode__(self):
         return self.title[0:20]
