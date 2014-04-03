@@ -3,6 +3,8 @@ from django.forms.widgets import Textarea, TextInput
 from django.forms import ModelForm
 from ckeditor.fields import RichTextField
 from base.choices import *
+from fiber.models import Page
+from django.core.exceptions import ObjectDoesNotExist
 
 # Create your models here.
 
@@ -27,6 +29,24 @@ class Meeting(models.Model):
 
     def __unicode__(self):
         return self.title
+
+    def create_fiber_page(self):
+        # A method to automatically build the necessary blank fiber page for a meeting instance
+        # Requires that a meetings page exists. Meeting detail pages are
+        # created under the meetings page
+        meetings_page = Page.objects.get(title="meetings")
+        # test if a meeting detail page already exists
+        try:
+            Page.objects.get(title=self.title)
+        # if it doesn't exist, create a new page
+        except ObjectDoesNotExist: # it not there create it
+            p = Page(title=self.title, parent=meetings_page, url=self.year)
+            p.save()
+        else:
+            print("Page already exists")
+
+
+    # TODO Add is_current method to identify which meeting is the current meeting for the year.
 
 # Variable assignments for Abstract model #
 

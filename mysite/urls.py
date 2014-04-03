@@ -17,10 +17,7 @@ urlpatterns = patterns('',
     # App URLS
     url(r'^$', RedirectView.as_view(url='home/'), name='reverse'),  # redirected to home
     url(r'^home/', include('base.urls', namespace="base")),  # note the lack of a terminal dollar sign.
-
-
-    #url(r'^workshops/', include('meetings.urls', namespace="meetings")),
-    #url(r'^data/', include('data.urls', namespace="data")),  # note the lack of a terminal dollar sign in the re
+    url(r'^meetings/', include('meetings.urls', namespace="meetings")),  # note the lack of a terminal dollar sign.
 
     # Admin URLS
     url(r'^admin/', include(admin.site.urls)),

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load fiber_tags%}
+
+{% block main_content %}
+    <div class="center"><img id="square" class="center" /> <img id="square" class="center" /> <img id="square" class="center" /></div>
+    <p>&nbsp;</p>
+    <section class="content">
+        {% if meeting_list %}
+
+                <div class="content">
+                <table>
+                    {% for meeting in meeting_list|dictsortreversed:"year" %}
+
+                    <tr>
+                        <td>{{ meeting.year }}</td>
+                        <td><a href="{% url 'meetings:meeting_detail' year=meeting.year %}">{{ meeting.location }}</a></td>
+                        <td>{{ meeting.associated_with }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                </div>
+
+        {% else %}
+            <p>There are no meetings.</p>
+        {% endif %}
+    </section>
+{% endblock %}
+

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load fiber_tags%}
+
+{% block main_content %}
+    <section class="content">
+        <h2>{{ meeting.title }}</h2>
+    {% if meeting.start_date %}<p>{{ meeting.start_date }} - {{ meeting.end_date }}</p>{% endif %}
+    <p>{{ meeting.location }}</p>
+    {% if meeting.abstract_set.all %}
+    <h2>Abstracts</h2>
+        {% for abstract in meeting.abstract_set.all  %}
+            <h2>{{ abstract.title }}</h2>
+
+        {% endfor %}
+
+    {% endif %}
+    </section>
+{% endblock %}
+

@@ -1,27 +1,29 @@
-# Create your views here.
-# Using class based views.
-
-from django.shortcuts import get_object_or_404
 from django.views import generic
 from models import *
 from django.core.urlresolvers import reverse
 from fiber.views import FiberPageMixin
 
 
-class AbstractIndexView(FiberPageMixin, generic.ListView):
-    # A class to combine the context for the fiber page with the general context.
+class MeetingsView(FiberPageMixin, generic.ListView):
+    # default template name is 'meetings/meeting_list.html'
+    model = Meeting
+
     def get_fiber_page_url(self):
-        return reverse('meetings:index', args=[self.meeting])
+        return reverse('meetings:meetings')
 
 
-class IndexView(AbstractIndexView):
-    template_name = 'meetings/abstracts.html'
-    context_object_name = 'abstracts'
+class MeetingsDetailView(FiberPageMixin, generic.DetailView):
+    template_name = 'meetings/meeting_detail.html'
 
-    def get_queryset(self):
-        # build a query set of abstracts for a given meeting. The meeting_name is passed from meetings/urls.py
-        self.meeting = get_object_or_404(Meeting, title=self.kwargs["meeting_name"])
+    # Define the meeting object
+    def get_object(self, queryset=None):
+        meeting_year=self.kwargs['year']
+        return Meeting.objects.get(year=meeting_year)
 
-        """Return a list of abstracts for the current meeting"""
-        return Abstract.objects.filter(meeting=self.meeting)
+    # Fetch corresponding fiber page content
+    # In this view there is a separate fiber page for
+    # every meeting
+    def get_fiber_page_url(self):
+        return reverse('meetings:meeting_detail', kwargs={'year': self.kwargs['year']})
+
 
