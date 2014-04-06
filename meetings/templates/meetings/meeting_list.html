@@ -13,8 +13,29 @@
 
                     <tr>
                         <td>{{ meeting.year }}</td>
-                        <td><a href="{% url 'meetings:meeting_detail' year=meeting.year %}">{{ meeting.location }}</a></td>
+                        <td>
+                            {% if meeting.has_detail %}
+                            <a href="{% url 'meetings:meeting_detail' year=meeting.year %}">{{ meeting.location }}</a>
+                            {% else %}
+                                {{ meeting.location }}
+                            {% endif %}
+
+                        </td>
                         <td>{{ meeting.associated_with }}</td>
+                        <td>
+                            {% if meeting.program_pdf %}
+                            <a href="{{ meeting.program_pdf.url }}">program</a>
+                                {% else %}--
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if meeting.abstracts_pdf %}
+                            <a href="{{ meeting.abstracts_pdf.url }}">abstracts</a>
+                                {% else %}--
+                            {% endif %}
+                        </td>
+
+
                     </tr>
                     {% endfor %}
                 </table>
@@ -26,3 +47,8 @@
     </section>
 {% endblock %}
 
+{% comment%}
+TODO Add the rest of the links to pdf files
+TODO Change table CSS
+TODO Highlight current year
+{% endcomment %}

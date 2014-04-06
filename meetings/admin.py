@@ -23,13 +23,14 @@ class AbstractAdminForm(forms.ModelForm):
 
 
 class AbstractAdmin(admin.ModelAdmin):
-    list_display = ('id', 'contact_email', 'presentation_type', 'title', 'year', 'abstract_rank')
+    list_display = ('id','contact_email', 'presentation_type', 'title', 'year', 'abstract_rank', 'accepted')
     list_display_links = ['id', 'title']
-    list_filter = ['year', 'presentation_type','abstract_rank']
+    list_editable = ['accepted', ]
+    list_filter = ['year', 'presentation_type', 'abstract_rank', 'accepted']
     search_fields = ['title', 'author__name']
     form = AbstractAdminForm
-    inlines = [AuthorInline,]
-
+    inlines = [AuthorInline, ]
+    #actions = [create_abstract_csv, create_abstract4meeting_html, create_abstract4publication_html]
 
 class AbstractInline(admin.TabularInline):
     model = Abstract
@@ -38,7 +39,7 @@ class AbstractInline(admin.TabularInline):
 class MeetingAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'year', 'location', 'start_date', 'end_date', 'associated_with')
     list_display_links = ['id', 'location']
-    list_editable = ['year', 'associated_with']
+    list_editable = []
     list_filter = ['associated_with']
     search_fields = ['location', 'associated_with', 'description']
     inlines = [AbstractInline,]

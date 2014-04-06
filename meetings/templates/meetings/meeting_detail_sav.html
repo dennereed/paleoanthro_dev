@@ -3,13 +3,17 @@
 
 {% block main_content %}
     <section class="content">
+        <h2>{{ meeting.title }}</h2>
+    {% if meeting.start_date %}<p>{{ meeting.start_date }} - {{ meeting.end_date }}</p>{% endif %}
+    <p>{{ meeting.location }}</p>
 
 
-    {% if abstract_list %}
+    {% if meeting.abstract_set.all %}
         <h1>Podium Abstracts</h1>
         <p></p>
 
-        {% for abstract in abstract_list  %}
+        {% for abstract in meeting.abstract_set  %}
+            {{ forloop.counter }}.
             {% if abstract.presentation_type == 'Paper' %}
                 <h3>{{ abstract.title }}</h3>
                 <p>
@@ -28,7 +32,7 @@
         <h1>Poster Abstracts</h1>
         <p></p>
 
-        {% for abstract in abstract_list %}
+        {% for abstract in meeting.abstract_set.all %}
             {% if abstract.presentation_type == 'Poster' %}
                 <h3>{{ abstract.title }}</h3>
                 <p>
@@ -40,6 +44,7 @@
                     {% endif %}
                 {% endfor %}
                 </p>
+                {{ abstract.abstract_text|safe }}
                 {% if abstract.abstract_media %}
                 <a href="{{ abstract.abstract_media }}">download poster</a>
                 {% endif %}

@@ -5,6 +5,7 @@ from ckeditor.fields import RichTextField
 from base.choices import *
 from fiber.models import Page
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse
 
 # Create your models here.
 
@@ -20,15 +21,38 @@ FUNDING_CHOICES = (
 
 class Meeting(models.Model):
     title = models.CharField(max_length=200, null=False, blank=False)
-    year = models.IntegerField(null=False, blank=False)
+    # year is being used informally as a foreign key to the corresponding fiber page.
+    year = models.IntegerField(null=False, blank=False, unique=True)
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
     associated_with = models.CharField(max_length=200, null=True, blank=True)
     location = models.CharField(max_length=200, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
+    program_pdf = models.FileField(upload_to='uploads/files', null=True, blank=True)
+    abstracts_pdf = models.FileField(upload_to='uploads/files', null=True, blank=True)
 
     def __unicode__(self):
         return self.title
+
+    # Function used by meetings.html template to test if a meeting page
+    # exists and is public. We set the is_public option to True in admin if
+    # they contain
+    # meeting details. A link to the page is automatically included in meetings.html
+    def has_detail(self):
+        try:
+            p=Page.objects.get(title=self.title)
+        # if it doesn't exist, create a new page
+        except ObjectDoesNotExist: # it not there create it
+            return False
+            # Create page if it doesn't exist?
+            #p = Page(title=self.title, parent=meetings_page, url=self.year)
+            #p.save()
+        else:
+            if p.is_public:
+                return True
+            else:
+                return False
+
 
     def create_fiber_page(self):
         # A method to automatically build the necessary blank fiber page for a meeting instance
@@ -67,7 +91,7 @@ class Abstract(models.Model):
     contact_email = models.EmailField(max_length=128, null=False, blank=False)
     presentation_type = models.CharField(max_length=20, null=False, blank=False, choices=PRESENTATION_TYPE_CHOICES,
                                          help_text=PRESENTATION_TYPE_HELP)
-    title = models.CharField(max_length=128, null=False, blank=False)
+    title = models.CharField(max_length=200, null=False, blank=False)
     abstract_text = RichTextField(null=False, blank=False, help_text=ABSTRACT_TEXT_HELP)
     acknowledgements = models.TextField(null=True, blank=True)
     references = models.TextField(null=True, blank=True, help_text=REFERENCES_HELP)
@@ -78,14 +102,23 @@ class Abstract(models.Model):
     created = models.DateField(null=False, blank=True, auto_now_add=True)
     abstract_rank = models.IntegerField(null=True, blank=True)
     abstract_media = models.FileField(upload_to="meetings/files", null=True, blank=True)
+    accepted = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.title[0:20]
+
+    def lead_author_last_name(self):
+        return self.author_set.order_by('author_rank')[0].last_name
+
+        lead_author_last_name.short_description = 'Lead Name'
+
 
 
 class Author(models.Model):
     abstract = models.ForeignKey('Abstract')
     author_rank = models.IntegerField()
+    last_name = models.CharField(null=True, blank=True, max_length=200)
+    first_name = models.CharField(null=True, blank=True, max_length=200)
     name = models.CharField(max_length=200)
     department = models.CharField(max_length=200, null=True, blank=True)
     institution = models.CharField(max_length=200, null=True, blank=True)
@@ -94,6 +127,18 @@ class Author(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def full_name(self):
+        if self.first_name and self.last_name:
+            return ("%s %s" % (self.first_name, self.last_name)).title()
+        else:
+            raise ObjectDoesNotExist
+
+        full_name.short_description = 'Name'
+        full_name.admin_order_field = 'last_name'
+
+    class Meta:
+        ordering = ['author_rank']
 
 
 ### Model Forms ###
