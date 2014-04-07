@@ -1,7 +1,7 @@
 from django.contrib import admin
 from models import *
 from django import forms
-
+from django.forms.widgets import Textarea
 
 
 class AuthorAdmin(admin.ModelAdmin):
@@ -31,6 +31,7 @@ class AbstractAdmin(admin.ModelAdmin):
     form = AbstractAdminForm
     inlines = [AuthorInline, ]
     #actions = [create_abstract_csv, create_abstract4meeting_html, create_abstract4publication_html]
+
 
 class AbstractInline(admin.TabularInline):
     model = Abstract

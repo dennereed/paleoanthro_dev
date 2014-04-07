@@ -10,6 +10,7 @@ from base.models import *
 from fiber.models import Page
 
 
+# Factory method to create a fiber page tree.
 def create_django_page_tree():
     mainmenu=Page(title='mainmenu')
     mainmenu.save()
@@ -19,6 +20,8 @@ def create_django_page_tree():
     join.save()
     members=Page(title='members', parent=home, url='members', template_name='base/members')
     members.save()
+    meetings = Page(title='meetings', parent=mainmenu, url='meetings', template_name='')
+    meetings.save()
 
 
 class MemberMethodTest(TestCase):
