@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from fiber.models import Page
 
 
-# Factory method to create a fiber page tree.
+# Factory method to create a fiber page tree with five pages.
 def create_django_page_tree():
     mainmenu=Page(title='mainmenu')
     mainmenu.save()
@@ -25,18 +25,19 @@ def create_meeting(year=2020, title='Jamaica 2020', location='Jamaica', associat
     """
     return Meeting(title, year, location=location,associated_with=associated_with)
 
-
+# Factory method to create a fiber page tree with five base pages plus three meetings pages and their associated
+# meeting instances.
 def create_three_meetings_with_pages():
     # Create base fiber tree
     create_django_page_tree()
     # Create meeting instances
-    calgary = Meeting(year=2014, title='Calgary 2014', location='Calgary', associated_with='AAPA')
+    calgary = Meeting(year=2014, title='Calgary 2014', location='Calgary, AB', associated_with='AAPA')
     calgary.create_fiber_page()
     calgary.save()
-    san_francisco = Meeting(year=2015, title='San Francisco 2015', location='San Francisco', associated_with='SAA')
+    san_francisco = Meeting(year=2015, title='San Francisco 2015', location='San Francisco, CA', associated_with='SAA')
     san_francisco.create_fiber_page()
     san_francisco.save()
-    atlanta = Meeting(year=2016, title='Atlanta 2016', location='Atlanta', associated_with='AAPA')
+    atlanta = Meeting(year=2016, title='Atlanta 2016', location='Atlanta, GA', associated_with='AAPA')
     atlanta.create_fiber_page()
     atlanta.save()
 
@@ -98,10 +99,23 @@ class MeetingMethodTests(TestCase):
 
     def test_meeting_has_detail_method(self):
         """
-        Tests for the has_detail method
+        Tests the has_detail method
         """
+        # Create a meeting
         calgary_2014 = Meeting(year=2014, title='Calgary 2014', location='Calgary', associated_with='AAPA')
         calgary_2014.save()
+        # Create a default page tree
+        create_django_page_tree()
+        # IF no fiber page then has_detail should be false
+        self.assertEqual(calgary_2014.has_detail(), False)
+        # Call page constructor method
+        calgary_2014.create_fiber_page()
+        # If fiber page then has_detail should be true
+        self.assertEqual(calgary_2014.has_detail(), True)
+        cfp = Page.objects.get(url__exact=2014)  # get tha page instance
+        cfp.is_public = False  # set to not public
+        cfp.save()  # save the change
+        self.assertEqual(calgary_2014.has_detail(), False)  # Now has detail should return false
 
 
 class MeetingsViewTests(TestCase):
@@ -112,20 +126,88 @@ class MeetingsViewTests(TestCase):
         self.assertQuerysetEqual(response.context['meeting_list'], [])
 
     def test_meetings_index_view_with_meetings(self):
-        create_three_meetings_with_pages()
-        response = self.client.get(reverse('meetings:meetings'))
-        self.assertContains(response, "Calgary 2014", status_code=200)
-        self.assertContains(response, "San Francisco 2015", status_code=200)
-        self.assertContains(response, "Atlanta 2016", status_code=200)
+        create_three_meetings_with_pages()  # Constructs fiber page tree with three meetings and associated pages
+        response = self.client.get(reverse('meetings:meetings'))  # Get the Meetings index, this shoud show three meetings
+        calgary = Meeting.objects.get(year=2014)  # get meeting instance
+        san_francisco = Meeting.objects.get(year=2015)
+        atlanta = Meeting.objects.get(year=2016)
+        self.assertContains(response, calgary.location, status_code=200,)
+        self.assertContains(response, san_francisco.location, status_code=200)
+        self.assertContains(response, atlanta.location, status_code=200)
         self.assertQuerysetEqual(response.context['meeting_list'], ['<Meeting: Atlanta 2016>', '<Meeting: San Francisco 2015>', '<Meeting: Calgary 2014>'])
-        #self.assertContains(response, "<a", status_code=200, html=True)  # contains a table listing meetings
+        self.assertContains(response, "<table>")  # response includes a table element
+        self.assertContains(response, '<a href="/meetings/2014/"')  # contains a link to the 2014 meeting detail
+        self.assertContains(response, '<a href="/meetings/2015/"')
+        self.assertContains(response, '<a href="/meetings/2016/"')
+        self.assertEqual(Page.objects.count(), 8)  # should have 8 fiber pages
+        self.assertEqual(Meeting.objects.count(), 3)  # should hav 3 meetings
+
+        atlanta_fp = Page.objects.get(url__exact=2016)  # Get Atlanta fiber page
+        atlanta_fp.is_public = False  # Set to not public
+        atlanta_fp.save()  # save the change
+        self.assertEqual(atlanta_fp.is_public, False)
+        self.assertEqual(atlanta.has_detail(), False)  # meeting should NOT have detail
+        self.assertEqual(atlanta_fp.show_in_menu, False)  # meeting fiber page should not be in menu
+        response = self.client.get(reverse('meetings:meetings'))  # Reload the page!
+        self.assertNotContains(response, '<a href="/meetings/2016/"')  # If fiber page is not public and not in menu there should be no link to it
 
     def test_meetings_index_view_with_missing_meetings(self):
         create_three_meetings_with_pages()
         response = self.client.get(reverse('meetings:meetings'))
         self.assertNotContains(response, "Vancouver", status_code=200)  # Returns page but does not contain a meeting that does not exist.
-        #self.assertContains(response, "<table>", status_code=200, html=True)  # contains a table listing meetings
+        self.assertContains(response, "<table>", status_code=200)  # contains a table listing meetings
 
 
+class MeetingsDetailViewTests(TestCase):
+    fixtures = ['fiber_page_data.json', 'meetings_data_140408.json']
 
+    def test_meetings_detail_view(self):
+        response = self.client.get(reverse('meetings:meeting_detail', args=[2014]))
+        self.assertEqual(response.status_code, 200)
+
+
+class AbstractCreateViewTests(TestCase):
+    fixtures = ['fiber_page_data.json', 'meetings_data_140408.json']  # load test data that includes fiber pages, meetings, abstracts etc.
+
+    def test_sanity(self):
+        self.assertEqual(Meeting.objects.count(), 26)
+        self.assertEqual(Abstract.objects.count(), 83)
+        san_francisco = Meeting.objects.get(pk=24)
+        self.assertEqual(san_francisco.location, 'San Francisco, CA')
+        new_abstract=Abstract(meeting_id=24, contact_email='denne.reed@gmail.com', presentation_type='Paper',
+                    title='Silly Walks of the Neanderthals',
+                    abstract_text="""<p> Test abstract text about silly walks in Neanderthals.</p> """,
+                    year=2015)  # create a new abstract for the san francisco meeting
+        new_abstract.save()
+        self.assertEqual(Abstract.objects.count(), 84)
+
+    def test_abstract_create_view_with_get(self):
+        response = self.client.get(reverse('meetings:create_abstract'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "<form")  # Test that the page loads a form
+        self.assertTemplateUsed(response, 'meetings/add_abstract.html')
+
+
+    def test_abstract_create_view_with_empty_post(self):
+        response = self.client.post(reverse('meetings:create_abstract'), {})
+
+    def test_abstract_create_view_with_completed_form(self):
+        form_data = {'presentation_type': 'Paper',
+                     'title': '<p>A test title with strange characters &part;13C and species names like <em>Australopithecus afarensis</em></p>',
+                     'abstract_text': """<p>You think water moves fast? You should see ice. It moves like it has a mind. Like it knows it killed
+                     the world once and got a taste for murder. After the avalanche, it took us a week to climb out. Now, I don't know exactly when we
+                     turned on each other, but I know that seven of us survived the slide... and only five made it out. Now we took an oath, that I'm
+                      breaking now. We said we'd say it was the snow that killed the other two, but it wasn't. Nature is lethal but it doesn't hold a
+                      candle to man. </p>""",
+                     'acknowledgements': 'I gratefully acknowledge the academy.',
+                     'contact_email': 'denne.reed@gmail.com',
+                     'validate_email':  'denne.reed@gmail.com',
+                     'author_set-0-name': 'Denne Reed',
+                     'author_set-0-department': 'Anthropology',
+                     'author_set-0-institution': 'University of Texas at Austin',
+                     'author_set-0-country': 'United States of America',
+                     'author_set-0-email_address': 'denne.reed@gmail.com',
+                     }
+        #response = self.client.post(reverse('meetings:create_abstract'), {})
+        #response.assertEqual(response.status_code, 200)
 
