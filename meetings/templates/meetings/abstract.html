@@ -5,12 +5,38 @@
     <section class="content">
         <h1>Abstract Submission</h1>
         <p></p>
+        {% if 'error_message' %}
+        <p class="error">{{ error_message }}</p>
+        {% endif %}
 
-        <form action="">
+        <form action="" method="post">{% csrf_token %}
+            {{ form.errors }}
             {{ form.as_p }}
-            <input type="submit" value="Update">
-        </form>
+            <p class="content">Confirm email: <br>
+                <input type="text" name="validate_email" size=60>{{ validate_email }} </p>
 
+            <hr>
+
+            {{ author_formset.management_form }}
+            {{ author_formset.non_form_errors }}
+            <p>List authors as they should appear in the program. Please use full first name. If there are multiple
+            institutional affiliations, add them to the comments box above.
+            Please DO NOT use all capital for author names and titles.
+            </p>
+
+            {% for form in author_formset %}
+                <p>Author {% cycle 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20 %}<br>
+                    {{ form.id }}
+                {{ form.errors }}{{ form.as_p}}
+                &nbsp;</p>
+            {% endfor %}
+
+            <input title="Add more authors" type="submit" value="Add More Authors" name='add_authors' value='add'/>
+            <p>&nbsp;</p>
+
+            <input type="submit" value="Submit Abstract" />
+
+        </form>
     </section>
 {% endblock %}
 

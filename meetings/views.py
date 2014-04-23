@@ -5,6 +5,7 @@ from fiber.views import FiberPageMixin
 from fiber.models import Page
 from forms import AbstractForm, AuthorInlineFormSet
 from django.shortcuts import render
+from django.http import HttpResponseRedirect
 from django.core.mail import send_mail
 
 
@@ -37,19 +38,71 @@ class MeetingsDetailView(FiberPageMixin, generic.ListView):
         return reverse('meetings:meeting_detail', kwargs={'year': self.kwargs['year']})
 
 
-#####################################################################
-## First pass at Create Abstract View. Needs Author inline formset ##
-#####################################################################
-class AbstractCreateView(FiberPageMixin, generic.FormView):
-    template_name = 'meetings/abstract.html'
-    form_class = AbstractForm
-    #success_url = '/thanks/'
+class AbstractThanksView(FiberPageMixin, generic.ListView):
+    template_name = 'meetings/thanks.html'
+    model = Abstract
 
-    def form_valid(self, form):
-        form.save()
+    def get_fiber_page_url(self):
+        return reverse('meetings:thanks')
+
+
+class AbstractCreateView1(FiberPageMixin, generic.FormView):
+    template_name = 'meetings/abstract.html'
+    model = Abstract
+    form_class = AbstractForm
+    success_url = '/meetings/abstract/thanks/'
 
     def get_fiber_page_url(self):
         return reverse('meetings:create_abstract')
+
+#####################################################################
+## First pass at Create Abstract View. Needs Author inline formset ##
+#####################################################################
+class AbstractCreateView(FiberPageMixin, generic.CreateView):
+    template_name = 'meetings/abstract.html'
+    model = Abstract
+    form_class = AbstractForm
+    success_url = '/meetings/abstract/thanks/'
+
+    def get_fiber_page_url(self):
+        return reverse('meetings:create_abstract')
+
+    def get(self, requests, *args, **kwargs):
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        author_formset = AuthorInlineFormSet()
+        return self.render_to_response(
+            self.get_context_data(form=form,
+                                  author_formset=author_formset)
+        )
+
+    def post(self, requests, *args, **kwargs):
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        form.meeting_id = 24
+        form.year = 2015
+        author_formset = AuthorInlineFormSet()
+        if (form.is_valid() and author_formset.is_valid()):
+            return self.form_valid(form, author_formset)
+        else:
+            return self.form_invalid(form, author_formset)
+
+    def form_valid(self, form, author_formset):
+        self.object = form.save()
+        author_formset.instance = self.object
+        author_formset.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form, author_formset):
+        #error_message="The form is invalid"
+        return self.render_to_response(
+            self.get_context_data(form=form,
+                                  author_formset=author_formset,
+                                  )
+        )
+
 
 
 #########################################

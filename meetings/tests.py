@@ -179,17 +179,26 @@ class AbstractCreateViewTests(TestCase):
                     abstract_text="""<p> Test abstract text about silly walks in Neanderthals.</p> """,
                     year=2015)  # create a new abstract for the san francisco meeting
         new_abstract.save()
-        self.assertEqual(Abstract.objects.count(), 84)
+        new_author=Author(abstract=new_abstract, author_rank=1, first_name="Denne",
+                          last_name="Reed", institution="University of Texas at Austin",
+                          department="Anthropolog", country="United States of America",
+                          email_address="denne.reed@gmail.com")
+        new_author.save()
+        self.assertEqual(Abstract.objects.count(), 84)  # Now there should be 84 abstracts
+        self.assertEqual(Author.objects.count(), 304)  # and 304 authors
 
     def test_abstract_create_view_with_get(self):
+        """A get request should loqd a blank version of the form"""
         response = self.client.get(reverse('meetings:create_abstract'))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)  # Response should be an HTML page with status code 200
+        self.assertTemplateUsed(response, 'meetings/abstract.html')  # Response should render the abstract.html template
         self.assertContains(response, "<form")  # Test that the page loads a form
-        self.assertTemplateUsed(response, 'meetings/add_abstract.html')
-
+        #self.assertContains(response, "input", count=27)  # Test that the page contains 27 input elements
 
     def test_abstract_create_view_with_empty_post(self):
         response = self.client.post(reverse('meetings:create_abstract'), {})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'meetings/abstract.html')  # Response should render the abstract.html template
 
     def test_abstract_create_view_with_completed_form(self):
         form_data = {'presentation_type': 'Paper',
@@ -208,6 +217,9 @@ class AbstractCreateViewTests(TestCase):
                      'author_set-0-country': 'United States of America',
                      'author_set-0-email_address': 'denne.reed@gmail.com',
                      }
-        #response = self.client.post(reverse('meetings:create_abstract'), {})
-        #response.assertEqual(response.status_code, 200)
-
+        response = self.client.post(reverse('meetings:create_abstract'), form_data)
+        self.assertEqual(response.status_code, 200)
+    #
+    # def test_abstract_create_view_get_additioanl_authors(self):
+    #     response = self.client.post( reverse('meetings:create_abstract'), {})
+    #     self.assertEqual(response.status_code, 200)
