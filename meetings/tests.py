@@ -201,24 +201,28 @@ class AbstractCreateViewTests(TestCase):
         self.assertTemplateUsed(response, 'meetings/abstract.html')  # Response should render the abstract.html template
 
     def test_abstract_create_view_with_completed_form(self):
-        form_data = {'presentation_type': 'Paper',
-                     'title': '<p>A test title with strange characters &part;13C and species names like <em>Australopithecus afarensis</em></p>',
-                     'abstract_text': """<p>You think water moves fast? You should see ice. It moves like it has a mind. Like it knows it killed
-                     the world once and got a taste for murder. After the avalanche, it took us a week to climb out. Now, I don't know exactly when we
-                     turned on each other, but I know that seven of us survived the slide... and only five made it out. Now we took an oath, that I'm
-                      breaking now. We said we'd say it was the snow that killed the other two, but it wasn't. Nature is lethal but it doesn't hold a
-                      candle to man. </p>""",
-                     'acknowledgements': 'I gratefully acknowledge the academy.',
-                     'contact_email': 'denne.reed@gmail.com',
-                     'validate_email':  'denne.reed@gmail.com',
-                     'author_set-0-name': 'Denne Reed',
-                     'author_set-0-department': 'Anthropology',
-                     'author_set-0-institution': 'University of Texas at Austin',
-                     'author_set-0-country': 'United States of America',
-                     'author_set-0-email_address': 'denne.reed@gmail.com',
+        form_data = {
+            'meeting': 24,
+            'year': 2015,
+            'presentation_type': 'Paper',
+             'title': '<p>A test title with strange characters &part;13C and species names like <em>Australopithecus afarensis</em></p>',
+             'abstract_text': """<p>You think water moves fast? You should see ice. It moves like it has a mind. Like it knows it killed
+             the world once and got a taste for murder. After the avalanche, it took us a week to climb out. Now, I don't know exactly when we
+             turned on each other, but I know that seven of us survived the slide... and only five made it out. Now we took an oath, that I'm
+              breaking now. We said we'd say it was the snow that killed the other two, but it wasn't. Nature is lethal but it doesn't hold a
+              candle to man. </p>""",
+             'acknowledgements': 'I gratefully acknowledge the academy.',
+             'contact_email': 'denne.reed@gmail.com',
+             'validate_email':  'denne.reed@gmail.com',
+             'author_set-0-name': 'Denne Reed',
+             'author_set-0-department': 'Anthropology',
+             'author_set-0-institution': 'University of Texas at Austin',
+             'author_set-0-country': 'United States of America',
+             'author_set-0-email_address': 'denne.reed@gmail.com',
                      }
         response = self.client.post(reverse('meetings:create_abstract'), form_data)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)  # test that successful submit returns redirect
+        self.assertEqual(response['Location'], 'http://testserver/meetings/abstract/thanks/')  # test redirect location
     #
     # def test_abstract_create_view_get_additioanl_authors(self):
     #     response = self.client.post( reverse('meetings:create_abstract'), {})
