@@ -1,33 +1,39 @@
 from django.forms import ModelForm
-from models import Abstract, Author
+from models import Abstract, Author, Meeting
 from django.forms.models import inlineformset_factory
-from django.forms.widgets import Textarea, TextInput
+from django.forms.widgets import Textarea, TextInput, HiddenInput
+from django import forms
 
 
 # Abstract Model Form
 class AbstractForm(ModelForm):
+    confirm_email = forms.EmailField()
+    meeting = forms.ModelChoiceField(queryset=Meeting.objects.filter(year__exact=2015), empty_label=None)
+    year = forms.IntegerField(widget=HiddenInput, initial=2015)
 
     class Meta:
         model = Abstract
-        # fields = (
-        #     'presentation_type',
-        #     'title',
-        #     'abstract_text',
-        #     'acknowledgements',
-        #     'references',
-        #     'funding',
-        #     'comments',
-        #     'contact_email'
-        # )
-        #
-        # widgets = {
-        #     'contact_email': TextInput(attrs={'size': 60, }),
-        #     'title': Textarea(attrs={'cols': 60, 'rows': 2}),
-        #     'abstract_text': Textarea(attrs={'cols': 60, 'rows': 20}),
-        #     'acknowledgements': Textarea(attrs={'cols': 60, 'rows': 5}),
-        #     'references': Textarea(attrs={'cols': 60, 'rows': 5}),
-        #     'comments': Textarea(attrs={'cols': 60, 'rows': 10}),
-        # }
+        fields = (
+            'year',
+            'meeting',
+            'presentation_type',
+            'title',
+            'abstract_text',
+            'acknowledgements',
+            'references',
+            'funding',
+            'comments',
+            'contact_email'
+        )
+
+        widgets = {
+            'contact_email': TextInput(attrs={'size': 60, }),
+            'title': Textarea(attrs={'cols': 60, 'rows': 2}),
+            'abstract_text': Textarea(attrs={'cols': 60, 'rows': 20}),
+            'acknowledgements': Textarea(attrs={'cols': 60, 'rows': 5}),
+            'references': Textarea(attrs={'cols': 60, 'rows': 5}),
+            'comments': Textarea(attrs={'cols': 60, 'rows': 10}),
+        }
 
 
 # Author Model Form

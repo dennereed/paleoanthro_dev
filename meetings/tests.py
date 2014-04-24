@@ -201,6 +201,7 @@ class AbstractCreateViewTests(TestCase):
         self.assertTemplateUsed(response, 'meetings/abstract.html')  # Response should render the abstract.html template
 
     def test_abstract_create_view_with_completed_form(self):
+        self.assertEqual(Abstract.objects.filter(year=2015).count(), 0)  # initially no 2015 abstracts
         form_data = {
             'meeting': 24,
             'year': 2015,
@@ -223,6 +224,7 @@ class AbstractCreateViewTests(TestCase):
         response = self.client.post(reverse('meetings:create_abstract'), form_data)
         self.assertEqual(response.status_code, 302)  # test that successful submit returns redirect
         self.assertEqual(response['Location'], 'http://testserver/meetings/abstract/thanks/')  # test redirect location
+        self.assertEqual(Abstract.objects.filter(year=2015).count(), 1)  # verify that new abstract is saved
     #
     # def test_abstract_create_view_get_additioanl_authors(self):
     #     response = self.client.post( reverse('meetings:create_abstract'), {})
