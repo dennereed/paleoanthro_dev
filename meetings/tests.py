@@ -213,7 +213,7 @@ class AbstractCreateViewTests(TestCase):
               candle to man. </p>""",
              'acknowledgements': 'I gratefully acknowledge the academy.',
              'contact_email': 'denne.reed@gmail.com',
-             'validate_email':  'denne.reed@gmail.com',
+             'confirm_email':  'denne.reed@gmail.com',
              'author_set-0-name': 'Denne Reed',
              'author_set-0-department': 'Anthropology',
              'author_set-0-institution': 'University of Texas at Austin',
