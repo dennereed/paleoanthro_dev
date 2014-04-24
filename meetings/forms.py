@@ -7,7 +7,7 @@ from django import forms
 
 # Abstract Model Form
 class AbstractForm(ModelForm):
-    confirm_email = forms.EmailField()
+    confirm_email = forms.EmailField(widget=TextInput(attrs={'size': 60}))
     meeting = forms.ModelChoiceField(queryset=Meeting.objects.filter(year__exact=2015), empty_label=None)
     year = forms.IntegerField(widget=HiddenInput, initial=2015)
 
@@ -28,6 +28,7 @@ class AbstractForm(ModelForm):
 
         widgets = {
             'contact_email': TextInput(attrs={'size': 60, }),
+
             'title': Textarea(attrs={'cols': 60, 'rows': 2}),
             'abstract_text': Textarea(attrs={'cols': 60, 'rows': 20}),
             'acknowledgements': Textarea(attrs={'cols': 60, 'rows': 5}),

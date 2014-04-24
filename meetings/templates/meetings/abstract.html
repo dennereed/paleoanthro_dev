@@ -12,8 +12,11 @@
         <form action="" method="post">{% csrf_token %}
             {{ form.errors }}
             {{ form.as_p }}
+
+        {%  comment %}
             <p class="content">Confirm email: <br>
                 <input type="text" name="validate_email" size=60>{{ validate_email }} </p>
+                {% endcomment %}
 
             <hr>
 
