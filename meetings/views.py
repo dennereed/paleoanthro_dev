@@ -55,6 +55,11 @@ class AbstractCreateView1(FiberPageMixin, generic.FormView):
     def get_fiber_page_url(self):
         return reverse('meetings:create_abstract')
 
+    def form_valid(self, form):
+        self.object = form.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+
 #####################################################################
 ## First pass at Create Abstract View. Needs Author inline formset ##
 #####################################################################
