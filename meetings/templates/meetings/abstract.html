@@ -5,9 +5,12 @@
     <section class="content">
         <h1>Abstract Submission</h1>
         <p></p>
+
+        {% comment %}
         {% if 'error_message' %}
         <p class="error">{{ error_message }}</p>
         {% endif %}
+        {% endcomment %}
 
         <form action="" method="post">{% csrf_token %}
             {{ form.errors }}
