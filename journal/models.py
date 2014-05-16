@@ -1,5 +1,12 @@
 from django.db import models
 
+CONTENT_TYPE_CHOICES = (
+('Annual Meeting Abstracts', 'Annual Meeting Abstracts'),
+('Articles', 'Articles'),
+('Letters', 'Letters'),
+('Data', 'Data'),
+('Reviews', 'Reviews'),
+)
 
 
 class Content(models.Model):
