@@ -11,8 +11,10 @@
 	<div id="wpr-page">
 		<div id="page">
 			<header>
-
+                {% block logo %}
                 <div id="logo"><a href="/home"><img id="logo_image" src="{% static 'paleoanthro_images/skull_grey150.jpg' %}"></a>Paleoanthropology Society</div>
+                {% endblock %}
+
 				<nav id="mainmenu" class="clearfix">
 					{% show_menu "mainmenu" 1 1 %}
 				</nav>

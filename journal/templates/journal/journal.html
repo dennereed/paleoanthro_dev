@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load fiber_tags%}
+{% load staticfiles %}
+
+{% block logo %}
+<div id="logo"><a href="/home"><img id="logo_image" src="{% static 'paleoanthro_images/skull_grey150.jpg' %}"></a><img src="{%  static 'paleoanthro_images/journalbanner.gif' %}"></div>
+{% endblock %}
+
+{% block main_content %}
+
+    {% if abstracts %}
+    <h3>Annual Meeting Abstracts</h3>
+    <hr>
+    {% for item in abstracts %}
+        <b>{{item.title}}</b><br>
+        <i>Pages {{item.start_page}} - {{item.end_page}}</i><br>
+        {{item.doi}}<br>
+        <a href="/static/journal/content/{{item.pdf_link}}">PDF</a> |
+        <a href="{{item.id}}/citation/">How to cite</a> |
+        <a href="{{item.id}}/bibtex/">Export in BibTex format</a> |
+        <a href="{{item.id}}/ris/">Export in RIS format</a>
+        &nbsp;<br>
+    {% endfor %}
+    &nbsp;<br>&nbsp;<br>
+    {% endif %}
+
+    {% if articles %}
+    <h3>Articles</h3>
+    <hr>
+    {% for item in articles %}
+        <b>{{item.title}}</b><br>
+        <i>Pages {{item.start_page}} - {{item.end_page}}</i><br>
+        {{item.authors}}<br>
+        {{item.doi}}<br>
+        {% if item.supplement1 %}
+            Supplementary Documents:
+            <a href=/static/journal/content/{{item.supplement1}}>{{item.supplement1}}</a>&nbsp;
+            <a href=/static/journal/content/{{item.supplement2}}>{{item.supplement2}}</a>&nbsp;
+            <a href=/static/journal/content/{{item.supplement3}}>{{item.supplement3}}</a>&nbsp;
+            <a href=/static/journal/content/{{item.supplement4}}>{{item.supplement4}}</a>
+        {% endif %}
+        <a href="/static/journal/content/{{item.pdf_link}}">PDF</a> |
+        <a href="{{item.id}}/citation/">How to cite</a> |
+        <a href="{{item.id}}/bibtex/">Export in BibTex format</a> |
+        <a href="{{item.id}}/ris/">Export in RIS format</a>
+        &nbsp;<br>
+    {% endfor %}
+    &nbsp;<br>&nbsp;<br>
+    {% endif %}
+
+    {% if data %}
+    <h3>Data</h3>
+    <hr>
+    {% for item in data %}
+        <b>{{item.title}}</b><br>
+        <i>Pages {{item.start_page}} - {{item.end_page}}</i><br>
+        {{item.authors}}<br>
+        {{item.doi}}<br>
+        {% if item.supplement1 %}
+            Supplementary Documents:
+            <a href=/static/journal/content/{{item.supplement1}}>{{item.supplement1}}</a>&nbsp;
+            <a href=/static/journal/content/{{item.supplement2}}>{{item.supplement2}}</a>&nbsp;
+            <a href=/static/journal/content/{{item.supplement3}}>{{item.supplement3}}</a>&nbsp;
+            <a href=/static/journal/content/{{item.supplement4}}>{{item.supplement4}}</a>
+        {% endif %}
+        <a href="/static/journal/content/{{item.pdf_link}}">PDF</a> |
+        <a href="{{item.id}}/citation/">How to cite</a> |
+        <a href="{{item.id}}/bibtex/">Export in BibTex format</a> |
+        <a href="{{item.id}}/ris/">Export in RIS format</a>
+        &nbsp;<br>
+    {% endfor %}
+    &nbsp;<br>&nbsp;<br>
+    {% endif %}
+
+    {% if reviews %}
+    <h3>Reviews</h3>
+    <hr>
+    {% for item in reviews %}
+        <b>{{item.title}}</b><br>
+        <i>Pages {{item.start_page}} - {{item.end_page}}</i><br>
+        {{item.authors}}<br>
+        {{item.doi}}<br>
+        <a href="/static/journal/content/{{item.pdf_link}}">PDF</a> |
+        <a href="{{item.id}}/citation/">How to cite</a> |
+        <a href="{{item.id}}/bibtex/">Export in BibTex format</a> |
+        <a href="{{item.id}}/ris/">Export in RIS format</a>
+        &nbsp;<br>
+    {% endfor %}
+    &nbsp;<br>&nbsp;<br>
+    {% endif %}
+
+{% endblock %}
