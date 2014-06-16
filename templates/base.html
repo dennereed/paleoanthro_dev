@@ -22,6 +22,7 @@
 			<aside id="aside-left">
 				<nav id="submenu">
 					{% show_menu "mainmenu" 2 3 %}
+                    {% block nav_content %}{% endblock %}
 				</nav>
                 {% show_page_content "aside-upper-left" %}
                 {% show_page_content "aside-lower-left" %}

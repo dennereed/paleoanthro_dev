@@ -2,9 +2,12 @@
 {% load fiber_tags%}
 
 {% block main_content %}
-    <div class="center"><img id="square" class="center" /> <img id="square" class="center" /> <img id="square" class="center" /></div>
-    <p>&nbsp;</p>
+
+        <p class="center"><img id="square" /> <img id="square" /> <img id="square" /></p>
+
     <section class="content">
+        <h1 class="center">Announcements</h1>
+        <hr/>
         {% if announcement_list %}
             {% for announcement in announcement_list %}
                 <div class="content">
