@@ -9,6 +9,8 @@ urlpatterns = patterns('',
                        url(r'^content/(?P<resource>[A-Za-z0-9_\.]+)/$', views.static_redirect, name='static_content'),
                        # ex /journal/current/
                        url(r'^current/$', views.journal_current, name='current'),
+                       # ex /journal/volumes/
+                       url(r'^volumes/$', views.JournalIndex.as_view(), name='journal_index'),
                        # ex /journal/volumes/2013/
                        url(r'^volumes/(?P<year>\d{4})/$', views.JournalVolumes.as_view(), name='volumes'),
                        # ex /journal/volumes/2013/223/citation/

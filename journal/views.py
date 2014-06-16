@@ -8,11 +8,9 @@ from django.http import HttpResponse
 import string
 
 
-
 #############################
 # class based journal views #
 #############################
-
 
 class JournalHome(FiberPageMixin, generic.ListView):
     model = Content
@@ -38,8 +36,31 @@ class JournalHome(FiberPageMixin, generic.ListView):
         return reverse('journal:journal')
 
 
+class JournalIndex(FiberPageMixin, generic.ListView):
+    model = Content
+    template_name = 'journal/journal_index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(JournalIndex, self).get_context_data(**kwargs)
+
+        # Get a unique list of all volume years in the content db
+        def get_content_years():
+            years = [] # initialize the list
+            for c in Content.objects.all():  # get all content items
+                if c.year not in years:  # add a year if not there
+                    years.append(c.year)
+                    years.sort()  # sort latest to earliest
+            return years
+
+        context['years'] = get_content_years()
+
+        return context
+
+    def get_fiber_page_url(self):
+        return reverse('journal:journal_index')
+
+
 class JournalVolumes(FiberPageMixin, generic.ListView):
-    # default template name is 'meetings/meeting_list.html'
     template_name = 'journal/journal.html'
     context_object_name = 'content_list'
 

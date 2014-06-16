@@ -52,10 +52,13 @@ class Meeting(models.Model):
                 return False
 
     def create_fiber_page(self):
+        """
+        A method to automatically build the necessary blank fiber page for a meeting instance
+        Requires that a meetings page exists. Meeting detail pages are
+        created under the meetings page
+        """
         # TODO add handler if meetings page does not exist.
-        # A method to automatically build the necessary blank fiber page for a meeting instance
-        # Requires that a meetings page exists. Meeting detail pages are
-        # created under the meetings page
+
         meetings_page = Page.objects.get(title="meetings")
         # test if a meeting detail page already exists
         try:
