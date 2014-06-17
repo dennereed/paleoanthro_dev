@@ -68,6 +68,7 @@ INSTALLED_APPS = (
     'base',  # main site app
     'meetings',  # meetings app
     'journal',  # paleoanthro journal app
+    'dissertations',  # dissertation app
 )
 
 # These entries extended by entries below in Django Fiber section
