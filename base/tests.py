@@ -133,6 +133,16 @@ class PageViewTests(TestCase):
         create_django_page_tree()
         response = self.client.get(reverse('base:home'))
         self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "There are no active announcements")  # Test no announcements message
+        Announcement.objects.create(title="A Wonderful Test Announcement",
+                                    short_title="Test_Short_Title",
+                                    body="<p>Announcement body text html format</p>",
+                                    category="Job",
+                                    priority=1,
+                                    expires=timezone.now()+datetime.timedelta(days=1),  # current announcement
+                                    approved=True,)
+        response = self.client.get(reverse('base:home'))
+        self.assertContains(response, "A Wonderful Test Announcement")  # Test that announcement appears on home page
 
     def test_reverse_method_for_join_page(self):
         create_django_page_tree()
