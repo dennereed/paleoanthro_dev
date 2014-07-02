@@ -6,8 +6,11 @@ Replace this with more appropriate tests for your application.
 """
 
 from django.test import TestCase
-from base.models import *
+from base.models import Member, Announcement
 from fiber.models import Page
+from django.core.urlresolvers import reverse
+from django.utils import timezone
+import datetime
 
 
 # Factory method to create a fiber page tree.
@@ -23,6 +26,20 @@ def create_django_page_tree():
     meetings = Page(title='meetings', parent=mainmenu, url='meetings', template_name='')
     meetings.save()
 
+
+class AnnouncementMethodTests(TestCase):
+    def test_create_announcement(self):
+        announcements_starting_count = Announcement.objects.count()
+        Announcement.objects.create(title="Test Title",
+                                    short_title="Test_Short_Title",
+                                    body="<p>Announcement body text html format</p>",
+                                    category="Job",
+                                    priority=1,
+                                    expires=timezone.now()+datetime.timedelta(days=1),
+                                    approved=True,
+                                    )
+        announcements_end_count = Announcement.objects.count()
+        self.assertEqual(announcements_end_count, announcements_starting_count+1)
 
 class MemberMethodTest(TestCase):
 
