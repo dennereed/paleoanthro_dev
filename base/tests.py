@@ -17,11 +17,11 @@ import datetime
 def create_django_page_tree():
     mainmenu=Page(title='mainmenu')
     mainmenu.save()
-    home=Page(title='home', parent=mainmenu, url='home', template_name='base/home.html')
+    home = Page(title='home', parent=mainmenu, url='home', template_name='base/home.html')
     home.save()
-    join=Page(title='join', parent=home, url='join', template_name='base/join.html')
+    join = Page(title='join', parent=home, url='join', template_name='base/join.html')
     join.save()
-    members=Page(title='members', parent=home, url='members', template_name='base/members')
+    members = Page(title='members', parent=home, url='members', template_name='base/members')
     members.save()
     meetings = Page(title='meetings', parent=mainmenu, url='meetings', template_name='')
     meetings.save()
@@ -65,7 +65,7 @@ class AnnouncementMethodTests(TestCase):
         announcements_end_count = Announcement.objects.count()
         self.assertEqual(announcements_end_count, announcements_starting_count+2)
         announcement = Announcement.objects.get(title="Test Active Announcement")
-        self.assertEqual(announcement.pk,1)
+        self.assertEqual(announcement.pk, 1)
         self.assertEqual(announcement.is_active(), True)  # should be true b/c pub_date current, approved, not expired
         expired_announcement = Announcement.objects.get(title="Test Expired Announcement")
         self.assertEqual(expired_announcement.is_active(), False)  # Should return False
@@ -76,11 +76,11 @@ class AnnouncementMethodTests(TestCase):
         future_pub_datetime = timezone.now()+datetime.timedelta(days=+2)
         future_pub_date = future_pub_datetime.date()
         # Test is active method with different pub dates
-        announcement.pub_date=old_pub_date  # current announcement has older pub date
+        announcement.pub_date = old_pub_date  # current announcement has older pub date
         self.assertEqual(announcement.is_active(), True)  # past or current pub date should be active
-        announcement.pub_date=future_pub_date
+        announcement.pub_date = future_pub_date
         self.assertEqual(announcement.is_active(), False)  # future pub date should not be active
-        announcement.pub_date=old_pub_date
+        announcement.pub_date = old_pub_date
         self.assertEqual(announcement.is_active(), True)  # return to good pub date, should be true
         announcement.approved = False
         self.assertEqual(announcement.is_active(), False)  # OK pub date, but not approved
@@ -127,9 +127,8 @@ class MemberMethodTest(TestCase):
 
         membership_end_count = Membership.objects.count()
         self.assertEqual(membership_end_count, membership_start_count+3)
-
-
-
+        member_end_count = Member.objects.count()
+        self.assertEqual(member_end_count, member_start_count+1)
 
 
 class PageViewTests(TestCase):
