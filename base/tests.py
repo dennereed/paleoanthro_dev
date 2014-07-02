@@ -21,7 +21,7 @@ def create_django_page_tree():
     home.save()
     join = Page(title='join', parent=home, url='join', template_name='base/join.html')
     join.save()
-    members = Page(title='members', parent=home, url='members', template_name='base/members')
+    members = Page(title='members', parent=home, url='members', template_name='base/members.html')
     members.save()
     meetings = Page(title='meetings', parent=mainmenu, url='meetings', template_name='')
     meetings.save()
