@@ -47,7 +47,7 @@ class Announcement(models.Model):
     category = models.CharField(max_length=20, choices=ANNOUNCEMENT_CHOICES)
     priority = models.IntegerField()
     created = models.DateField(default=timezone.now())
-    pub_date = models.DateField(default=timezone.now())
+    pub_date = models.DateField(default=timezone.now())  # field type converts datetime to date
     expires = models.DateField()
     approved = models.NullBooleanField()
     upload1 = models.FileField(upload_to='uploads/files', null=True, blank=True)
@@ -61,7 +61,7 @@ class Announcement(models.Model):
         return self.body[0:50]
 
     def is_active(self):
-        now = timezone.now().date()
+        now = timezone.now().date()   # need current date (rather than datetime) for comparison
         return self.expires > now and self.pub_date <= now and self.approved is True
     is_active.admin_order_field='pub_date'
     is_active.boolean = True
@@ -151,7 +151,7 @@ class Membership(models.Model):
     year = models.IntegerField() # the membership/registration year
     payment_type = models.CharField(max_length=128, choices=PAYMENT_TYPE_CHOICES) # whether the payment is for registration or membership
 
-    def __unicode(self):
+    def __unicode__(self):
         return self.year
 
 
