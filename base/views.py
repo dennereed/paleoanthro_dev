@@ -1,53 +1,36 @@
-# Create your views here.
-# Using class based views.
-
 from django.views import generic
 from models import *
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.core.urlresolvers import reverse
 from fiber.views import FiberPageMixin
 from django.utils import timezone
-
-
-"""
-Using generic class-based views. Generic views are passed to a fiber mixin class
-that adds the fiber page content. The fiber page is then inherited by another
-class that is called by urls.py
-
-Ex. generic.ListView -> AnnouncementFiberView -> AnnouncementView
-"""
 
 
 ########################
 ## Announcement Views ##
 ########################
 
-class AnnouncementFiberView(FiberPageMixin, generic.ListView):
-    def get_fiber_page_url(self):
-        return reverse('base:home')
 
-
-class AnnouncementView(AnnouncementFiberView):
+class AnnouncementView(FiberPageMixin, generic.ListView):
     template_name = 'base/home.html'
     context_object_name = 'announcement_list'
 
     def get_queryset(self):
         """Return a list of current announcements"""
         now = timezone.now()
-        return Announcement.objects.filter(pub_date__lte=now).filter(expires__gt=now).filter(approved=True).order_by('-pub_date', '-created')
+        return Announcement.objects.filter(pub_date__lte=now).\
+            filter(expires__gt=now).filter(approved=True).order_by('-pub_date', '-created')
 
-
-class AnnouncementDetailFiberView(FiberPageMixin, generic.DetailView):
-    # A class to combine the context for the fiber page with the general context.
     def get_fiber_page_url(self):
-        # reverse lookup to find the fiber page at /home/detail/
-        # this requires that there is a matching fiber page.
-        # It also requires that there be a base.url that matches the fiber page.
-        return reverse('base:announcement_detail_root')  #
+        return reverse('base:home')
 
 
-class AnnouncementDetailView(AnnouncementDetailFiberView):
+class AnnouncementDetailView(FiberPageMixin, generic.DetailView):
     template_name = 'base/detail.html'
     model = Announcement
+
+    # A class to combine the context for the fiber page with the general context.
+    def get_fiber_page_url(self):
+        return '/home/detail/'
 
 
 #####################
@@ -67,7 +50,8 @@ class JoinView(JoinIndexView):
     def get_queryset(self):
         """Return a list of current announcements"""
         now = timezone.now()
-        return Announcement.objects.filter(pub_date__lte=now).filter(expires__gt=now).filter(approved=True).order_by('-pub_date')
+        return Announcement.objects.filter(pub_date__lte=now).\
+            filter(expires__gt=now).filter(approved=True).order_by('-pub_date')
 
 
 #######################

@@ -43,7 +43,7 @@ class MeetingAdmin(admin.ModelAdmin):
     list_editable = []
     list_filter = ['associated_with']
     search_fields = ['location', 'associated_with', 'description']
-    inlines = [AbstractInline,]
+    inlines = [AbstractInline, ]
 
 admin.site.register(Meeting, MeetingAdmin)
 admin.site.register(Abstract, AbstractAdmin)

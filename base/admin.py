@@ -4,17 +4,21 @@ from django.template import loader, RequestContext
 from django.contrib.admin import helpers
 from django.http import HttpResponse
 from django.core.mail import send_mass_mail
+import csv
 
 
 class PaleoanthroUserAdmin(admin.ModelAdmin):
     def email(self):
         return self.user.email
+
     def last_name(self):
         return self.user.last_name
+
     def first_name(self):
         return self.user.first_name
-    list_filter = ['send_emails','institution']
-    search_fields = ('last_name','first_name')
+
+    list_filter = ['send_emails', 'institution']
+    search_fields = ('last_name', 'first_name')
     list_display = ['first_name', 'last_name', 'email', 'send_emails']
     actions = ['send_emails']
 
@@ -23,7 +27,7 @@ class PaleoanthroUserAdmin(admin.ModelAdmin):
         A function that defines a custom admin action to send bulk emails to selected users. The function calls a
         custom template called email.html
         """
-        returnURL="/admin/paleoschema/paleocoreuser/"
+        return_url = "/admin/paleoschema/paleocoreuser/"
         if 'apply' in request.POST: # check if the email form has been completed
             # code to send emails. We use send_mass_email, which requires a four-part tuple
             # containing the subject, message, from_address and a list of to addresses.
@@ -31,7 +35,7 @@ class PaleoanthroUserAdmin(admin.ModelAdmin):
                 if request.POST["subject"] == '':
                     self.message_user(request, "Message is missing a subject")
                     t = loader.get_template("base/templates/email.html")
-                    c = RequestContext(request, {'returnURL':returnURL,'emails':queryset, 'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME,})
+                    c = RequestContext(request, {'return_url': return_url, 'emails':queryset, 'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME,})
                     return HttpResponse(t.render(c))
                 else:
                     subject = request.POST["subject"]
@@ -39,7 +43,7 @@ class PaleoanthroUserAdmin(admin.ModelAdmin):
                 if request.POST["message"] == '':
                     self.message_user(request, "Message is empty")
                     t = loader.get_template("base/templates/email.html")
-                    c = RequestContext(request, {'returnURL':returnURL,'emails':queryset, 'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME,})
+                    c = RequestContext(request, {'return_url':return_url, 'emails':queryset, 'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME,})
                     return HttpResponse(t.render(c))
                 message = request.POST["message"]
             from_address = 'paleocore@paleocore.org'
@@ -57,7 +61,8 @@ class PaleoanthroUserAdmin(admin.ModelAdmin):
             self.message_user(request, "Mail sent successfully ")
         else:
             t = loader.get_template("base/templates/email.html")
-            c = RequestContext(request, {'returnURL':returnURL,'emails':queryset, 'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME,})
+            c = RequestContext(request, {'return_url':return_url, 'emails': queryset,
+                                         'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME, })
             return HttpResponse(t.render(c))
     send_emails.short_description = "Send an email to selected members"
 
@@ -88,15 +93,15 @@ class MemberAdmin(admin.ModelAdmin):
     actions = [create_csv, 'send_emails']
 
     def send_emails(self, request, queryset):
-        returnURL = "/admin/paleoanthro/member/"
-        if 'apply' in request.POST: # check if the email form has been completed
+        return_url = "/admin/paleoanthro/member/"
+        if 'apply' in request.POST:  # check if the email form has been completed
             # code to send emails. We use send_mass_email, which requires a four-part tuple
             # containing the subject, message, from_address and a list of to addresses.
             if 'subject' in request.POST:
                 if request.POST["subject"] == '':
                     self.message_user(request, "Message is missing a subject", level='error')
                     t = loader.get_template("email.html")
-                    c = RequestContext(request, {'returnURL': returnURL, 'emails': queryset,
+                    c = RequestContext(request, {'return_url': return_url, 'emails': queryset,
                                                  'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME, })
                     return HttpResponse(t.render(c))
                 else:
@@ -122,7 +127,7 @@ class MemberAdmin(admin.ModelAdmin):
             self.message_user(request, "Mail sent successfully ")
         else:
             t = loader.get_template("email.html")
-            c = RequestContext(request, {'returnURL': returnURL, 'emails': queryset,
+            c = RequestContext(request, {'return_url': return_url, 'emails': queryset,
                                          'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME, })
             return HttpResponse(t.render(c))
 
@@ -133,12 +138,10 @@ class MembershipAdmin(admin.ModelAdmin):
     list_display = ('member', 'year', 'payment_type')
 
 
-
 class AnnouncementAdmin(admin.ModelAdmin):
-    list_display = ('title', 'approved', 'created', 'pub_date', 'expires', 'is_active')
+    list_display = ('id', 'title', 'approved', 'created', 'pub_date', 'expires', 'is_active')
     list_filter = ['created', 'approved', 'expires', 'category']
     search_fields = ['title', 'short_title', 'body']
-
 
 
 # Register your models here.
