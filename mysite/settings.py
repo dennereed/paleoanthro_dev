@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 import local_settings
 
-
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 gettext = lambda s: s
@@ -112,7 +111,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
-STATIC_URL = '/static/'  # See also STATIC_ROOT entry in Django Fiber section
+# STATIC_URL = '/static/'  # See also STATIC_ROOT entry in Django Fiber section   # development
+STATIC_URL = 'http://paleoanthro-qa.reedd.webfactional.com/static/'  # production
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 
 
@@ -121,7 +121,6 @@ TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 ##############################
 CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_IMAGE_BACKEND = "pillow"
-
 
 
 ###########################
@@ -156,7 +155,9 @@ INSTALLED_APPS = (
 # import os  # Already imported above
 # BASE_DIR = os.path.abspath(os.path.dirname(__file__)) # Already defined above
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')  # development
+STATIC_ROOT = '/home/reedd/webapps/staticqa/'  # production
+
 # STATIC_URL = '/static/' # Already defined above
 STATICFILES_FINDERS = DEFAULT_SETTINGS.STATICFILES_FINDERS + (
     'compressor.finders.CompressorFinder',
