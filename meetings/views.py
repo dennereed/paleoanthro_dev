@@ -46,20 +46,6 @@ class AbstractThanksView(FiberPageMixin, generic.ListView):
         return reverse('meetings:thanks')
 
 
-class AbstractCreateView1(FiberPageMixin, generic.FormView):
-    template_name = 'meetings/abstract.html'
-    model = Abstract
-    form_class = AbstractForm
-    success_url = '/meetings/abstract/thanks/'
-
-    def get_fiber_page_url(self):
-        return reverse('meetings:create_abstract')
-
-    def form_valid(self, form):
-        self.object = form.save()
-        return HttpResponseRedirect(self.get_success_url())
-
-
 #####################################################################
 ## First pass at Create Abstract View. Needs Author inline formset ##
 #####################################################################
@@ -72,35 +58,69 @@ class AbstractCreateView(FiberPageMixin, generic.CreateView):
     def get_fiber_page_url(self):
         return reverse('meetings:create_abstract')
 
-    def get(self, requests, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
+        """
+        Implementation based on post by Kevin Dias
+        http://kevindias.com/writing/django-class-based-views-multiple-inline-formsets/
+        Handles GET requests and instantiates blank versions of the form and its inline formsets.
+        """
+
         self.object = None
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         author_formset = AuthorInlineFormSet()
         return self.render_to_response(
             self.get_context_data(form=form,
-                                  author_formset=author_formset)
+                                  author_formset=author_formset)  # template expects author_formset in context
         )
 
-    def post(self, requests, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
+        """
+        Handles POST requests, instantiating a form instance and its inline formsets with
+        the passed POST variables and then checking them for validity.
+        :param requests:
+        :param args:
+        :param kwargs:
+        :return:
+        """
         self.object = None
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         form.meeting_id = 24
         form.year = 2015
-        author_formset = AuthorInlineFormSet()
+        author_formset = AuthorInlineFormSet(self.request.POST)
         if (form.is_valid() and author_formset.is_valid()):
             return self.form_valid(form, author_formset)
         else:
             return self.form_invalid(form, author_formset)
 
     def form_valid(self, form, author_formset):
-        self.object = form.save()
+        """
+        Called if all forms are valid. Creates an Abstract instance along with associated
+        Authors and then redirects to a success page.
+        :param form:
+        :param author_formset:
+        :return:
+        """
+        self.object = form.save()  # save abstract
         author_formset.instance = self.object
-        author_formset.save()
+        new_authors = author_formset.save(commit=False)
+        rank = 1
+        for author in new_authors:
+            author.author_rank = rank
+            author.abstract = self.object
+            author.save()
+            rank += 1
+
         return HttpResponseRedirect(self.get_success_url())
 
     def form_invalid(self, form, author_formset):
+        """
+        Called if a form is invalid. Re-renders the form with the context data.
+        :param form:
+        :param author_form:
+        :return:
+        """
         #error_message="The form is invalid"
         return self.render_to_response(
             self.get_context_data(form=form,
