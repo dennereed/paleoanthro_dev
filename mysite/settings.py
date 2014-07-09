@@ -17,6 +17,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 gettext = lambda s: s
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.6/howto/static-files/
+
+STATIC_URL = local_settings.STATIC_URL  # import from local_settings.py
+STATIC_ROOT = local_settings.STATIC_ROOT  # development
+
+TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
+
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -109,11 +117,7 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.6/howto/static-files/
-# STATIC_URL = '/static/'  # See also STATIC_ROOT entry in Django Fiber section   # development
-STATIC_URL = 'http://paleoanthro-qa.reedd.webfactional.com/static/'  # production
-TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
+
 
 
 ##############################
@@ -154,9 +158,6 @@ INSTALLED_APPS = (
 
 # import os  # Already imported above
 # BASE_DIR = os.path.abspath(os.path.dirname(__file__)) # Already defined above
-
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')  # development
-STATIC_ROOT = '/home/reedd/webapps/staticqa/'  # production
 
 # STATIC_URL = '/static/' # Already defined above
 STATICFILES_FINDERS = DEFAULT_SETTINGS.STATICFILES_FINDERS + (
