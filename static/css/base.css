@@ -362,3 +362,22 @@ ol li {
     height: 10px;
     background-color: #0893cf;
 }
+
+
+
+ul.errorlist {
+    color: red;
+    text-align: right;
+    list-style-type: none;
+    padding-top: 0;
+    margin: 0;
+}
+
+ul.errorlist li {
+    color:red;
+    list-style-type: none;
+    position: relative;
+    left: 140px;
+    top: 50px;;
+}
+
