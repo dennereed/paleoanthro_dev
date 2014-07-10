@@ -13,7 +13,6 @@
         {% endcomment %}
 
         <form action="" method="post">{% csrf_token %}
-            {{ form.errors }}
             {{ form.as_p }}
 
         {%  comment %}
@@ -24,7 +23,6 @@
             <hr>
 
             {{ author_formset.management_form }}
-            {{ author_formset.non_form_errors }}
             <p>List authors as they should appear in the program. Please use full first name. If there are multiple
             institutional affiliations, add them to the comments box above.
             Please DO NOT use all capital for author names and titles.
@@ -38,7 +36,8 @@
 
             <input title="Add more authors" type="submit" value="Add More Authors" name='add_authors' value='add'/>
             <p>&nbsp;</p>
-            <input type="submit" value="Submit Abstract" class="submit"/>
+            <input type="submit" value="Submit Abstract" class="button"/>
+            <p>&nbsp;</p>
 
         </form>
     </section>

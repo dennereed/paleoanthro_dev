@@ -5,11 +5,8 @@
       <paths name="reedd_webfaction">
         <serverdata>
           <mappings>
-            <mapping deploy="/home/reedd/webapps/django165_pa_qa/paleoanthro" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/home/reedd/webapps/django165_pa_qa/paleoanthro/" local="$PROJECT_DIR$" web="/" />
           </mappings>
-          <excludedPaths>
-            <excludedPath local="true" path="$PROJECT_DIR$/manage.py" />
-          </excludedPaths>
         </serverdata>
       </paths>
     </serverData>

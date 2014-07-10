@@ -1,9 +1,15 @@
 {% extends "base.html" %}
 {% load fiber_tags%}
+{% load staticfiles %}
+{% load banner %}
 
 {% block main_content %}
 
-        <p class="center"><img id="square" /> <img id="square" /> <img id="square" /></p>
+
+    <div id="banner">
+        <img src="{% static 'base/home_page_images' %}/{{ 1|bannerImage }}"
+             alt="" width="500px" />
+    </div>
 
     <section class="content">
         <h1 class="center">News & Announcements</h1>
