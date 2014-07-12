@@ -9,9 +9,13 @@
 
                 <div class="content">
                 <table>
+                    <tr>
+                        <th>Year</th><th>Location</th><th>Assoc.</th><th>Program</th><th>Abstracts</th>
+                    </tr>
+
                     {% for meeting in meeting_list %}
 
-                    <tr>
+                    <tr bgcolor="{% cycle '#DDD' '#FFF' %}">
                         <td>{{ meeting.year }}</td>
                         <td>
                             {% if meeting.has_detail %}

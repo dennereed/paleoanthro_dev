@@ -216,13 +216,13 @@ header {
 
 .content table {
 	margin: 0 0 1.25em 0;
-	border: 1px solid #333;
+	/* border: 1px solid #333; */
 	width: 100%;
 }
 
 .content table tr th,
 .content table tr td {
-	border: 1px solid #333;
+	/* border: 1px solid #333; */
 	display: table-cell;
 	padding: 5px;
 	vertical-align: top;
