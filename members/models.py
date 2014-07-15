@@ -70,7 +70,7 @@ class Member(models.Model):
             return 'None'
 
     def get_absolute_url(self):
-        return reverse('base:member_update', kwargs={'pk': self.pk})
+        return reverse('members:member_update', kwargs={'pk': self.pk})
 
 
 class Membership(models.Model):

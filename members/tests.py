@@ -58,32 +58,22 @@ class MemberMethodTest(TestCase):
         member_end_count = Member.objects.count()
         self.assertEqual(member_end_count, member_start_count+1)
 
-
-class MembersPageViewMethods(TestCase):
-    def test_home_page_view_no_members(self):
-        create_django_page_tree()  # create a test fiber page tree
-        self.assertEqual(reverse('members:members'), '/members/')  # sanity check for reverse method
-        response = self.client.get(reverse('members:members'))  # fetch the home page
-        self.assertEqual(response.status_code, 200)  # check home page returns 200
-        self.assertContains(response, "No members match your searching")  # Test no members message
-
-    def test_home_page_view_one_member(self):
-        create_django_page_tree()
+    def test_get_absolute_url_method(self):
         member = Member.objects.create(last_name='Bugglesworth', first_name='Paul', member=True, registered=False)
-        Membership.objects.create(member=member, year=2013, payment_type="M")  # Add a membership record
-        response = self.client.get(reverse('members', "q=Reed"))
-        # Member.objects.create(title="A Wonderful Test Announcement",
-        #                             short_title="Test_Short_Title",
-        #                             body="<p>Announcement body text html format</p>",
-        #                             category="Job",
-        #                             priority=1,
-        #                             expires=timezone.now()+datetime.timedelta(days=1),  # current announcement
-        #                             approved=True,)
-        # response = self.client.get(reverse('base:home'))
-        # self.assertContains(response, "A Wonderful Test Announcement")  # Test that announcement appears on home page
-        #
-        # def test_reverse_method_for_members_page(self):
-        # create_django_page_tree()
-        # response = self.client.get(reverse('base:members'))
-        # self.assertEqual(response.status_code, 200)
+        self.assertEquals(member.get_absolute_url(), '/members/'+str(member.id)+'/')
+
+
+# class MembersPageViewMethods(TestCase):
+#     def test_home_page_view_no_members(self):
+#         create_django_page_tree()  # create a test fiber page tree
+#         self.assertEqual(reverse('members:members'), '/members/')  # sanity check for reverse method
+#         response = self.client.get(reverse('members:members'))  # fetch the home page
+#         self.assertEqual(response.status_code, 200)  # check home page returns 200
+#         self.assertContains(response, "No members match your searching")  # Test no members message
+#
+#     def test_home_page_view_one_member(self):
+#         create_django_page_tree()
+#         member = Member.objects.create(last_name='Bugglesworth', first_name='Paul', member=True, registered=False)
+#         Membership.objects.create(member=member, year=2013, payment_type="M")  # Add a membership record
+
 
