@@ -28,6 +28,7 @@ class MemberAdmin(admin.ModelAdmin):
                     'recent_registration', 'last_modified')
     list_display_links = ['id', 'last_name', 'first_name']
     list_filter = ['member', 'registered']
+    list_per_page = 600
     search_fields = ['last_name', 'first_name', 'id', 'email_address', 'country']
     inlines = [MembershipInline, ]
     actions = [create_csv, 'send_emails']
