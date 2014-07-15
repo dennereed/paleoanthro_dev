@@ -1,5 +1,5 @@
 from django.test import TestCase
-from base.models import Member, Announcement, Membership
+from base.models import Announcement
 from fiber.models import Page
 from django.core.urlresolvers import reverse
 from django.utils import timezone
@@ -91,48 +91,6 @@ class AnnouncementMethodTests(TestCase):
         self.assertEqual(len(expired_announcement.body_header()), 50)
 
 
-class MemberMethodTest(TestCase):
-
-    def test_create_member_method(self):
-        m = Member(last_name='Bugglesworth', first_name='Paul', title="Dr.", member=True, registered=False)
-        self.assertEqual(m.last_name, 'Bugglesworth')
-
-        member_start_count = Member.objects.count()
-        m.save()
-        Member.objects.create(last_name="Lennon", first_name="John", member=True, registered=True)
-        member_end_count = Member.objects.count()
-        self.assertEqual(member_end_count, member_start_count+2)
-
-    def test_uppercase_name_method(self):
-        m = Member.objects.create(last_name='Bugglesworth', first_name='Paul', member=True, registered=False)
-        self.assertEqual(m.upper_case_name(), 'Paul Bugglesworth')
-
-    def test_uppercase_name_method_with_title(self):
-        m = Member(title='Dr.', last_name='Bugglesworth', first_name='Paul', member=True, registered=False)
-        self.assertEqual(m.upper_case_name(), 'Dr. Paul Bugglesworth')
-
-    def test_recent_membership_method(self):
-        member_start_count = Member.objects.count()
-        membership_start_count = Membership.objects.count()
-        member = Member.objects.create(last_name='Bugglesworth', first_name='Paul', member=True, registered=False)
-        self.assertEqual(member.recent_membership(), 'None')  # None b/c Membership table is empty
-        self.assertEqual(member.recent_registration(), 'None')  # because no registration record
-        Membership.objects.create(member=member, year=2013, payment_type="M")  # Add a membership record
-        self.assertEqual(member.recent_membership(), '2013')  # True now that there is a membership record
-        self.assertEqual(member.recent_registration(), 'None')  # because no registration record
-        Membership.objects.create(member=member, year=2013, payment_type="R")  # Add a registration record
-        self.assertEqual(member.recent_membership(), '2013')
-        self.assertEqual(member.recent_registration(), '2013')
-        Membership.objects.create(member=member, year=2014, payment_type="M")  # Add a membership record
-        self.assertEqual(member.recent_membership(), '2014, 2013')
-        self.assertEqual(member.recent_registration(), '2013')
-
-        membership_end_count = Membership.objects.count()
-        self.assertEqual(membership_end_count, membership_start_count+3)
-        member_end_count = Member.objects.count()
-        self.assertEqual(member_end_count, member_start_count+1)
-
-
 class PageViewTests(TestCase):
     """
     Tests for the pages and links in the base part of the site, including the home page,
@@ -188,9 +146,4 @@ class PageViewTests(TestCase):
     def test_reverse_method_for_join_page(self):
         create_django_page_tree()
         response = self.client.get(reverse('base:join'))
-        self.assertEqual(response.status_code, 200)
-
-    def test_reverse_method_for_members_page(self):
-        create_django_page_tree()
-        response = self.client.get(reverse('base:members'))
         self.assertEqual(response.status_code, 200)

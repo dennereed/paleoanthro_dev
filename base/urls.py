@@ -10,9 +10,5 @@ urlpatterns = patterns('',
                        url(r'^detail/$', views.AnnouncementDetailView.as_view(), name='announcement_detail_root'),
                        # exL /home/join
                        url(r'^join/$', views.JoinView.as_view(), name='join'),
-                       # ex /home/membership
-                       url(r'^members/$', views.MembersIndexView.as_view(), name='members'),
-                       url(r'^members/(?P<pk>\d+)/$', views.MemberUpdateView.as_view(), name='member_update'),
-                       url(r'^members/update/$', views.MemberUpdateView.as_view(), name='member_update_root'),
                        )
 

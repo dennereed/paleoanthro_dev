@@ -19,7 +19,8 @@ urlpatterns = patterns('',
     url(r'^home/', include('base.urls', namespace="base")),  # note the lack of a terminal dollar sign.
     url(r'^meetings/', include('meetings.urls', namespace="meetings")),  # note the lack of a terminal dollar sign.
     url(r'^journal/', include('journal.urls', namespace="journal")),  # note the lack of a terminal dollar sign.
-    url(r'^dissertations/', include('dissertations.urls', namespace="dissertations")),  # note the lack of a terminal dollar sign.
+    url(r'^members/', include('members.urls', namespace="members")),  # note the lack of a terminal dollar sign.
+    url(r'^dissertations/', include('dissertations.urls', namespace="dissertations")),  # no terminal dollar sign.
 
 
     # Admin URLS
