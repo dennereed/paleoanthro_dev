@@ -60,16 +60,16 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
 
-    # RichText Editing Widget
-    'ckeditor',
-
     # Django Fiber Apps
     'django.contrib.staticfiles',
     'mptt',
     'compressor',
     'easy_thumbnails',
     'fiber',
-    #'pages',
+
+    # Additional 3rd party apps
+    'ckeditor',
+    'captcha',
 
     # Project Apps
     'base',  # main site app
@@ -165,3 +165,5 @@ STATICFILES_FINDERS = DEFAULT_SETTINGS.STATICFILES_FINDERS + (
     'compressor.finders.CompressorFinder',
 )
 
+CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
+CAPTCHA_NOISE_FUNCTIONS = []

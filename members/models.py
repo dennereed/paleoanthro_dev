@@ -2,6 +2,7 @@ from django.db import models
 from base.choices import COUNTRY_CHOICES, PAYMENT_TYPE_CHOICES
 from django.forms import ModelForm, EmailInput, Textarea, TextInput
 from django.core.urlresolvers import reverse
+from captcha.fields import CaptchaField
 
 
 ##########################
@@ -87,11 +88,12 @@ class Membership(models.Model):
 #######################
 
 class MemberForm(ModelForm):
+    human_test = CaptchaField(help_text='Enter the solution')
     class Meta:
         model = Member
         fields = ['title', 'first_name', 'last_name', 'email_address',
                   'address_line1', 'address_line2', 'address_line3', 'city',
-                  'state_or_province', 'postal_code', 'country']
+                  'state_or_province', 'postal_code', 'country', 'human_test']
         widgets = {
             'title': TextInput(attrs={'size': 15}),
             'email_address': EmailInput(attrs={'size': 30}),

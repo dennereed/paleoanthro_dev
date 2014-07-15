@@ -26,6 +26,7 @@ urlpatterns = patterns('',
     # Admin URLS
     url(r'^admin/', include(admin.site.urls)),
     (r'^ckeditor/', include('ckeditor.urls')),  # Rich text widget
+    url(r'^captcha/', include('captcha.urls')),  # captcha form challenge
 
     # Django Fiber URLS
     (r'^api/v2/', include('fiber.rest_api.urls')),

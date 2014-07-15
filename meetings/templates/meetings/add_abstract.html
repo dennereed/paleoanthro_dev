@@ -30,8 +30,6 @@ and re-submit.
 
 {{ abstract_form }}
 
-<tr><td align="center"><b>Confirm email:</b></td><td><input type="text" name="validate_email" size=60>{{ validate_email }}</td></tr>
-
     <tr><td>&nbsp;</td></tr>
 <tr><td>&nbsp;<br></td></tr>
 <tr><td colspan=3 align = center><b>Author Information</b></td></tr>
@@ -54,9 +52,6 @@ Please DO NOT use all capital for author names and titles.
 
 <tr><td><input title="Add more authors" type="submit" value="Add More Authors" name='add_authors' value='add'/></td></tr>
 
-<tr><td colspan=3><br><br><input type="text" name="pcode" size="5">
-{% if pcode_error %}<font color="red">{% endif %} Enter here the five characters visible in this image</font>
-<img src="/static/images/pcode.jpg" width="78" height="34"></td></tr>
 
 <tr><td>&nbsp;<br></td></tr>
 <tr><td><input type="submit" value="Submit Abstract" /></td></tr>
