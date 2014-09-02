@@ -66,7 +66,7 @@ class Meeting(models.Model):
         # if it doesn't exist, create a new page
         except ObjectDoesNotExist:  # it not there create it
             p = Page(title=self.title, parent=meetings_page, url=self.year)
-            p.show_in_menu=False
+            p.show_in_menu = False
             p.save()
         else:
             print("Page already exists")
