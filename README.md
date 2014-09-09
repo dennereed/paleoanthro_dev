@@ -3,7 +3,7 @@ paleoanthro
 
 Django and django-fiber code base for the Paleoanthropology Society web page at http://paleoanthro.org
 
-To run this web applicaiton you'll need to instal the following python libraries
+To run this web application you'll need to install the following python libraries
 
 Python Dependencies:  
 Django 1.6.7  # the django web application framework for python 2.x
